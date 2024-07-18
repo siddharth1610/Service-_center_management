@@ -2,6 +2,7 @@ import express from "express"
 import cors from "cors"
 import cookieParser from "cookie-parser"
 import fileUpload from "express-fileupload"
+import feedbackRouter from "./router/feedbackRouter.js"
 
 const app = express()
 
@@ -23,6 +24,8 @@ app.use(
         tempFileDir: "/tmp/"
     })
  );
+
+ app.use("/api/v1/feedback",feedbackRouter)
 
  export {app}
     
