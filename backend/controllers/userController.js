@@ -147,7 +147,7 @@ export const logoutAdmin = asyncHandler(async (req, res) => {
       })
       .json(new ApiResponse(201, "Admin Logged Out Successfully."));
   });
-  // Logout function for frontend patient
+  // Logout function for frontend Customer
   export const logoutCustomer = asyncHandler(async (req, res) => {
     res
       .status(201)
@@ -159,7 +159,7 @@ export const logoutAdmin = asyncHandler(async (req, res) => {
       })
       .json(new ApiResponse(201, "Customer Logged Out Successfully."));
   });
-  
+   
 
   export const addNewperson = asyncHandler(async (req, res) => {
     if (!req.files || Object.keys(req.files).length === 0) {

@@ -36,7 +36,7 @@ const Navbar = () => {
         <div className="links">
           <Link to={"/"}>Home</Link>
           <Link to={"/appointment"}>Appointment</Link>
-          <Link to={"/about"}>About Us</Link>
+          <Link to={"/aboutUs"}>About Us</Link>
           <Link to={"/products"}>Products</Link>
         </div>
         {isAuthenticated ? (

@@ -11,28 +11,29 @@ const FeedBackform = () => {
   const handleMessage = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(
-        "http://localhost:8000/api/v1/feedback/send",
-        {firstName,lastName,email,phone,message},
-        {
-          withCredentials: true,
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      )
-      .then((res) => {
-        console.log(res);
-        toast.success(res.data.message);
-        setFirstName("");
-        setLastName("");
-        setEmail("");
-        setPhone("");
-        setMessage("");
-      });
+      await axios
+        .post(
+          "http://localhost:8000/api/v1/feedback/send",
+          { firstName, lastName, email, phone, message },
+          {
+            withCredentials: true,
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+          toast.success(res.data.message);
+          setFirstName("");
+          setLastName("");
+          setEmail("");
+          setPhone("");
+          setMessage("");
+        });
     } catch (error) {
-        console.log(error);
-        toast.error(error.response.data.message)
+      console.log(error);
+      toast.error(error.response.data.message);
     }
   };
 
@@ -45,14 +46,16 @@ const FeedBackform = () => {
             type="text"
             placeholder="First Name"
             value={firstName}
-            onChange={setFirstName(e.target.value)}
+            onChange={(e) => setFirstName(e.target.value)}
           />
 
           <input
             type="text"
             placeholder="Last Name"
             value={lastName}
-            onChange={setLastName(e.target.value)}
+            onChange={(e) => {
+              setLastName(e.target.value);
+            }}
           />
         </div>
         <div>
@@ -60,14 +63,14 @@ const FeedBackform = () => {
             type="text"
             placeholder="Email"
             value={email}
-            onChange={setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
           />
 
           <input
             type="number"
             placeholder="Phone Number"
             value={phone}
-            onChange={setPhone(e.target.value)}
+            onChange={(e) => setPhone(e.target.value)}
           />
         </div>
         <div>
@@ -77,9 +80,9 @@ const FeedBackform = () => {
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           ></textarea>
-          <div style={{ justifyContent: "center", alignItems: "center" }}>
-            <button type="submit">Send</button>
-          </div>
+        </div>
+        <div style={{ justifyContent: "center", alignItems: "center" }}>
+          <button type="submit">Send</button>
         </div>
       </form>
     </div>

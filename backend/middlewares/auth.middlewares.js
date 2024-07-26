@@ -33,8 +33,8 @@ export const isCustomerAuthenticated = asyncHandler(
       const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
       req.user = await User.findById(decoded._id);
       if (req.user.role !== "Customer") {
-        return next(
-          new ErrorHandler(`${req.user.role} not authorized for this resource!`, 403)
+        throw(
+          new ApiError(`${req.user.role} not authorized for this resource!`, 403)
         );
       }
       next();
