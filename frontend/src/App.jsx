@@ -21,8 +21,8 @@ const App = () => {
       try {
         const response = await axios.get("http://localhost:8000/api/v1/user/customer", { withCredentials: true });
         setIsAuthenticated(true);
-        //console.log(response.data)
-        setUser(response.data.user); //check it
+        console.log(response.data)
+        setUser(response?.data); //check it
         // console.log(setUser(response.data)); 
       } catch (error) {
         setIsAuthenticated(false);

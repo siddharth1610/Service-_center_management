@@ -1,5 +1,5 @@
 import {User} from "../models/userSchema.js"
-import {ApiError } from "../utils/ApiError.js";
+import {ApiError} from "../utils/ApiError.js";
 import {asyncHandler } from "../utils/asyncHandler.js";
 import jwt from "jsonwebtoken"
 
@@ -28,7 +28,8 @@ export const isCustomerAuthenticated = asyncHandler(
     async (req, res, next) => {
       const token = req.cookies.customerToken;
       if (!token) {
-        return next(new ErrorHandler("User is not authenticated!", 400));
+       throw (
+        new ApiError("User is not authenticated!", 400)); 
       }
       const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
       req.user = await User.findById(decoded._id);
@@ -39,4 +40,4 @@ export const isCustomerAuthenticated = asyncHandler(
       }
       next();
     }
-  );
+  );  

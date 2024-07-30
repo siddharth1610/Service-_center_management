@@ -8,7 +8,10 @@ import axios from "axios";
 const Navbar = () => {
   const [show, setShow] = useState(false);
 
-  const { isAuthenticated, setIsAuthenticated } = useContext(UserContext);
+  const { isAuthenticated, setIsAuthenticated,user } = useContext(UserContext);
+  console.log(user);
+  
+  // let {firstName}=user?.data
 
   const navigateTo = useNavigate();
 
@@ -28,7 +31,9 @@ const Navbar = () => {
   const gotoLogin = () => {
     navigateTo("/login");
   };
+  
 
+  
   return (
     <nav className="container">
       <div className="logo">Xolt</div>
@@ -38,6 +43,7 @@ const Navbar = () => {
           <Link to={"/appointment"}>Appointment</Link>
           <Link to={"/aboutUs"}>About Us</Link>
           <Link to={"/products"}>Products</Link>
+          {/* <span>Welcome {firstName}</span> */}
         </div>
         {isAuthenticated ? (
           <button className="logoutBtn btn" onClick={handlelogout}>
