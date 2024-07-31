@@ -9,7 +9,7 @@ const Navbar = () => {
   const [show, setShow] = useState(false);
 
   const { isAuthenticated, setIsAuthenticated,user } = useContext(UserContext);
-  console.log(user);
+  //console.log(user);
   
   // let {firstName}=user?.data
 

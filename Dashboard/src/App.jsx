@@ -25,8 +25,8 @@ const App = () => {
       try {
         const response = await axios.get("http://localhost:8000/api/v1/user/admin", { withCredentials: true });
         setIsAuthenticated(true);
-       // console.log(response.data)
-        setAdmin(response?.data?.user); //check it
+        console.log(response.data.data)
+        setAdmin(response?.data?.data); //check it
         // console.log(setUser(response.data)); 
       } catch (error) {
         setIsAuthenticated(false);
@@ -43,9 +43,9 @@ const App = () => {
     <Routes>
       <Route path='/' element={<Dashboard/>} />
       <Route path="/login" element={<Login />} />
-      <Route path='/allPerson' element={<Persons/>} />
+      <Route path='/allPersons' element={<Persons/>} />
       <Route path='/Messages' element={<Messages/>} />
-      <Route path='/AddNewAdmin' element={<AddNewAdmin/>} />
+      <Route path='/admin/addnew' element={<AddNewAdmin/>} />
       <Route path='/AddNewPerson' element={<AddNewPerson/>} />
       <Route path='/AddAllproduct' element={<AddAllproducts/>} />
     </Routes>

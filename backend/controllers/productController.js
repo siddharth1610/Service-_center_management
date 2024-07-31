@@ -1,5 +1,5 @@
 import { Product } from "../models/productSchema.js";
-import {ApiError} from "../utils/ApiError.js";
+import ApiError from "../utils/ApiError.js";
 import {ApiResponse} from "../utils/Apiresponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import cloudinary from "cloudinary";
@@ -87,5 +87,5 @@ export const updateProductStatus = asyncHandler(
       throw(new ApiError("Product Not Found!", 404));
     }
     await product.deleteOne();
-    res.status(200).json(new ApiResponse(200,"Product Deleted!"));
+    res.status(200).json(new ApiResponse(200,product,"Product Deleted!"));
   });

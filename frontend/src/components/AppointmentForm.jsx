@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const AppointmentForm = () => {
   const [firstName, setFirstName] = useState("");
@@ -8,7 +10,7 @@ const AppointmentForm = () => {
   const [productId, setProductId] = useState("");
   const [gender, setGender] = useState("");
   const [appointmentDate, setAppointmentDate] = useState("");
-  const [department, setDepartment] = useState("Pediatrics");
+  const [department, setDepartment] = useState("Smartphone Repair");
   const [personFirstName, setPersonFirstName] = useState("");
   const [personLastName, setPersonLastName] = useState("");
   const [complaintMessage, setComplaintMessage] = useState("");
@@ -30,24 +32,66 @@ const AppointmentForm = () => {
   const [persons, setPersons] = useState([]);
   useEffect(() => {
     const fetchperson = async () => {
-      const { data } = await axios.get("", {
+      const { data } = await axios.get("http://localhost:8000/api/v1/user/allperson", {
         withCredentials: true,
       });
-      setPersons(data.persons);
-      console.log(data.persons);
+      setPersons(data.data);
+      console.log(data);
     };
     fetchperson();
   }, []);
   const handleAppointment = async (e) => {
     e.preventDefault();
     try {
-    } catch (error) {}
+      const hasVisitedBool = Boolean(hasVisited);
+      await axios.post(
+        "http://localhost:8000/api/v1/appointment/post",
+        {
+          firstName,
+          lastName,
+          email,
+          phone,
+          productId,
+          gender,
+          appointment_date: appointmentDate,
+          department,
+          person_firstName: personFirstName,
+          person_lastName: personLastName,
+          hasVisited: hasVisitedBool,
+          complaintMessage,
+        },
+        {
+          withCredentials: true,
+          headers: { "Content-Type": "application/json" },
+        }
+      ).then((res) => {
+      //   toast.success(res.data.message);
+      // console.log(res.data);
+      toast.success(res.data.message);
+      setFirstName(""),
+        setLastName(""),
+        setEmail(""),
+        setPhone(""),
+        setGender(""),
+        setAppointmentDate(""),
+        setDepartment(""),
+        setPersonFirstName(""),
+        setPersonLastName(""),
+        setHasVisited(""),
+        setComplaintMessage(""),
+        setProductId("")
+      })
+    } catch (error) {
+      //console.log(error);
+      toast.error(error.response.data.message);
+    }
   };
+
 
   return (
     <>
       <div className="container form-component appointment-form">
-        <h2>Appointment</h2>
+        <h2>For appointment kindly login:</h2>
         <form onSubmit={handleAppointment}>
           <div>
             <input
@@ -125,7 +169,8 @@ const AppointmentForm = () => {
                   return (
                     <option
                       value={`${pers.firstName} ${pers.lastName}`}
-                    ></option>
+                      key={index}
+                    >{pers.firstName} {pers.lastName}</option>
                   );
                 })}
             </select>
@@ -145,7 +190,7 @@ const AppointmentForm = () => {
             rows="10"
             value={complaintMessage}
             onChange={(e) => setComplaintMessage(e.target.value)}
-            placeholder="Write Complint here...."
+            placeholder="Write Complaint here...."
           />
           <div
             style={{

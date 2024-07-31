@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { User } from "../models/userSchema.js";
-import { ApiError } from "../utils/ApiError.js";
+import  ApiError  from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/Apiresponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Appointment } from "../models/appointmentSchema.js";
@@ -99,7 +99,7 @@ export const getAllAppointments = asyncHandler(async (req, res, next) => {
         runValidators: true,
         useFindAndModify: false,
       });
-      res.status(200).json(new ApiResponse(200,"Appointment Status Updated!"));
+      res.status(200).json(new ApiResponse(200,appointment,"Appointment Status Updated!"));
     }
   );
   export const deleteAppointment = asyncHandler(async (req, res, next) => {
@@ -109,7 +109,7 @@ export const getAllAppointments = asyncHandler(async (req, res, next) => {
       throw(new ApiError("Appointment Not Found!", 404));
     }
     await appointment.deleteOne();
-    res.status(200).json(new ApiResponse(200,"Appointment Deleted!"));
+    res.status(200).json(new ApiResponse(200,appointment,"Appointment Deleted!"));
   });
 
 
