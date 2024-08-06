@@ -9,7 +9,7 @@ const Navbar = () => {
   const [show, setShow] = useState(false);
 
   const { isAuthenticated, setIsAuthenticated,user } = useContext(UserContext);
-  //console.log(user);
+ // console.log(user);
   
   // let {firstName}=user?.data
 
@@ -35,7 +35,7 @@ const Navbar = () => {
 
   
   return (
-    <nav className="container">
+    <nav className="container" >
       <div className="logo">Xolt</div>
       <div className={show ? "navLinks showmenu" : "navLinks"}>
         <div className="links">
@@ -43,7 +43,11 @@ const Navbar = () => {
           <Link to={"/appointment"}>Appointment</Link>
           <Link to={"/aboutUs"}>About Us</Link>
           <Link to={"/products"}>Products</Link>
-          {/* <span>Welcome {firstName}</span> */}
+          {/* <h5>
+                  Welcome {
+                    `${user.data.firstName} ${user.data.lastName}`}
+                </h5> */}
+                
         </div>
         {isAuthenticated ? (
           <button className="logoutBtn btn" onClick={handlelogout}>

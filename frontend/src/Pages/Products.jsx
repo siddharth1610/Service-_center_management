@@ -3,7 +3,7 @@ import AllProduct from "../components/AllProduct"
 
 const Products = () => {
   return (
-    <AllProduct/>
+    <AllProduct title={" XOLT Products : "}  />
   )
 }
 

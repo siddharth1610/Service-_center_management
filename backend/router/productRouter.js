@@ -7,7 +7,7 @@ import { isAdminAuthenticated,isCustomerAuthenticated } from "../middlewares/aut
 const router = express.Router();
 
 router.post("/addProduct",isAdminAuthenticated ,addNewProduct);
-router.get("/allProduct",isAdminAuthenticated || isCustomerAuthenticated,getAllProduct);
+router.get("/allProduct", getAllProduct);
 router.put("/update/:id",isAdminAuthenticated,updateProductStatus)
 router.delete("/delete/:id",isAdminAuthenticated,deleteProduct)
 
