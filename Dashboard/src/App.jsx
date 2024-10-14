@@ -11,7 +11,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { UserContext } from './utils/UserContext'
 import axios from 'axios'
-import AddAllproducts from '../components/AddAllproducts'
+
 import "./App.css";
 
 
@@ -25,9 +25,9 @@ const App = () => {
       try {
         const response = await axios.get("http://localhost:8000/api/v1/user/admin", { withCredentials: true });
         setIsAuthenticated(true);
-        console.log(response.data.data)
-        setAdmin(response?.data?.data); //check it
-        // console.log(setUser(response.data)); 
+        
+        setAdmin(response?.data?.user); 
+         
       } catch (error) {
         setIsAuthenticated(false);
         setAdmin({});
@@ -47,7 +47,7 @@ const App = () => {
       <Route path='/Messages' element={<Messages/>} />
       <Route path='/admin/addnew' element={<AddNewAdmin/>} />
       <Route path='/AddNewPerson' element={<AddNewPerson/>} />
-      <Route path='/AddAllproduct' element={<AddAllproducts/>} />
+      
     </Routes>
     <ToastContainer position="top-center" />
    </Router>

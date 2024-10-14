@@ -9,9 +9,7 @@ const Navbar = () => {
   const [show, setShow] = useState(false);
 
   const { isAuthenticated, setIsAuthenticated,user } = useContext(UserContext);
- // console.log(user);
-  
-  // let {firstName}=user?.data
+ 
 
   const navigateTo = useNavigate();
 
@@ -42,11 +40,7 @@ const Navbar = () => {
           <Link to={"/"}>Home</Link>
           <Link to={"/appointment"}>Appointment</Link>
           <Link to={"/aboutUs"}>About Us</Link>
-          <Link to={"/products"}>Products</Link>
-          {/* <h5>
-                  Welcome {
-                    `${user.data.firstName} ${user.data.lastName}`}
-                </h5> */}
+          
                 
         </div>
         {isAuthenticated ? (

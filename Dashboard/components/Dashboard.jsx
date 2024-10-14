@@ -16,7 +16,7 @@ const Dashboard = () => {
           "http://localhost:8000/api/v1/appointment/getAllAppointments",
           { withCredentials: true }
         );
-        setAppointments(data.data);
+        setAppointments(data.appointments);
         //console.log(data.data);
       } catch (error) {
         setAppointments([]);

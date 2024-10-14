@@ -35,7 +35,7 @@ const AddNewPerson = () => {
 
   const handleAvatar = (e) => {
     const file = e.target.files[0];
-   // console.log(e.target.files[0]);
+   
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {

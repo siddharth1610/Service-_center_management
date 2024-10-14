@@ -57,10 +57,6 @@ const appointmentSchema = new mongoose.Schema({
     type: String,
     required: [true, "Message Is Required!"],
   },
-  productId: {
-    type: String,
-    required: [true, "Product id Is Required!"],
-  },
   personId: {
     type: mongoose.Schema.ObjectId,
     required: [true, "Doctor Id Is Invalid!"],

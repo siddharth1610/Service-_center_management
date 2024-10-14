@@ -7,7 +7,7 @@ const AppointmentForm = () => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [productId, setProductId] = useState("");
+  
   const [gender, setGender] = useState("");
   const [appointmentDate, setAppointmentDate] = useState("");
   const [department, setDepartment] = useState("Smartphone Repair");
@@ -35,8 +35,8 @@ const AppointmentForm = () => {
       const { data } = await axios.get("http://localhost:8000/api/v1/user/allperson", {
         withCredentials: true,
       });
-      setPersons(data.data);
-      console.log(data);
+      setPersons(data.persons);
+      
     };
     fetchperson();
   }, []);
@@ -44,14 +44,13 @@ const AppointmentForm = () => {
     e.preventDefault();
     try {
       const hasVisitedBool = Boolean(hasVisited);
-      await axios.post(
+      const { data }= await axios.post(
         "http://localhost:8000/api/v1/appointment/post",
         {
           firstName,
           lastName,
           email,
           phone,
-          productId,
           gender,
           appointment_date: appointmentDate,
           department,
@@ -64,10 +63,8 @@ const AppointmentForm = () => {
           withCredentials: true,
           headers: { "Content-Type": "application/json" },
         }
-      ).then((res) => {
-      //   toast.success(res.data.message);
-      // console.log(res.data);
-      toast.success(res.data.message);
+      )
+      toast.success(data.message);
       setFirstName(""),
         setLastName(""),
         setEmail(""),
@@ -78,11 +75,11 @@ const AppointmentForm = () => {
         setPersonFirstName(""),
         setPersonLastName(""),
         setHasVisited(""),
-        setComplaintMessage(""),
-        setProductId("")
-      })
+        setComplaintMessage("")
+        
+      
     } catch (error) {
-      //console.log(error);
+     
       toast.error(error.response.data.message);
     }
   };
@@ -175,16 +172,7 @@ const AppointmentForm = () => {
                 })}
             </select>
           </div>
-          <div>
-            <input
-              type="text"
-              placeholder="Product Id"
-              value={productId}
-              onChange={(e) => {
-                setProductId(e.target.value);
-              }}
-            />
-          </div>
+         
 
           <textarea
             rows="10"

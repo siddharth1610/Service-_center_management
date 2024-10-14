@@ -1,6 +1,6 @@
-import  ApiError  from "../utils/ApiError.js";
+import ErrorHandler from "../utils/errorMiddleware.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { ApiResponse } from "../utils/Apiresponse.js";
+
 import { User } from "../models/userSchema.js";
 import cloudinary from "cloudinary";
 import fs from "fs";
@@ -27,7 +27,7 @@ const generateToken = (user, message, statusCode, res) => {
     });
 };
 
-export const customerRegister = asyncHandler(async (req, res) => {
+export const customerRegister = asyncHandler(async (req, res,next) => {
   const { firstName, lastName, email, phone, dob, gender, password, role } =
     req.body;
   if (
@@ -40,11 +40,11 @@ export const customerRegister = asyncHandler(async (req, res) => {
     !password ||
     !role
   ) {
-    throw new ApiError("please fill form!!", 400);
+    return next(new ErrorHandler("Please Fill Full Form!", 400));
   }
   let user = await User.findOne({ email });
   if (user) {
-    throw new ApiError("User already Registered", 400);
+    return next(new ErrorHandler("User already Registered!", 400));
   }
 
   user = await User.create({
@@ -58,33 +58,35 @@ export const customerRegister = asyncHandler(async (req, res) => {
     role,
   });
 
-  generateToken(user, "Login Successfully!", 201, res);
+  generateToken(user, "Login Successfully!", 200, res);
 });
 
-export const login = asyncHandler(async (req, res) => {
+export const login = asyncHandler(async (req, res,next) => {
   const { email, password, confirmPassword, role } = req.body; //we send static value from frontend
   if (!email || !password || !confirmPassword || !role) {
-    throw new ApiError("Please provide all details!!", 400);
+    return next(new ErrorHandler("Please Fill Full Form!", 400));;
   }
   if (password !== confirmPassword) {
-    throw new ApiError("Password and confirm passowrd doesnt match!!", 400);
+    return next(
+      new ErrorHandler("Password & Confirm Password Do Not Match!", 400)
+    );
   }
   let user = await User.findOne({ email }).select("+password");
   if (!user) {
-    throw new ApiError("Invalid Password or Email", 400);
+    return next(new ErrorHandler("Invalid Email Or Password!", 400));
   }
   const isPasswordMatched = await user.comparePassword(password);
   if (!isPasswordMatched) {
-    throw new ApiError("Invalid Password or Email", 400);
+    return next(new ErrorHandler("Invalid Email Or Password!", 400));
   }
   if (role !== user.role) {
-    throw new ApiError(`User Not Found With This Role!`, 400);
+    return next(new ErrorHandler(`User Not Found With This Role!`, 400));;
   }
 
   generateToken(user, "Login Successfully!", 201, res);
 });
 
-export const addNewAdmin = asyncHandler(async (req, res) => {
+export const addNewAdmin = asyncHandler(async (req, res,next) => {
   const { firstName, lastName, email, phone, dob, gender, password } = req.body;
   if (
     !firstName ||
@@ -95,12 +97,12 @@ export const addNewAdmin = asyncHandler(async (req, res) => {
     !gender ||
     !password
   ) {
-    throw new ApiError("Please Fill Full Form!", 400);
+    return next(new ErrorHandler("Please Fill Full Form!", 400));
   }
 
   const isRegistered = await User.findOne({ email });
   if (isRegistered) {
-    throw new ApiError("Admin With This Email Already Exists!", 400);
+    return next(new ErrorHandler("Admin With This Email Already Exists!", 400));
   }
 
   const admin = await User.create({
@@ -113,18 +115,29 @@ export const addNewAdmin = asyncHandler(async (req, res) => {
     password,
     role: "Admin",
   });
-  return res.status(200).json(new ApiResponse(200, {}, "New Admin Registered"));
+  res.status(200).json({
+    success: true,
+    message: "New Admin Registered",
+    admin,
+  });
 });
+
 
 export const getAllperson = asyncHandler(async (req, res, next) => {
   const persons = await User.find({ role: "Person" });
-  return res.status(200).json(new ApiResponse(200, persons, "All Persons!!"));
+  res.status(200).json({
+    success: true,
+    persons,
+  });
 });
-
 export const getUserDetails = asyncHandler(async (req, res, next) => {
   const user = req.user;
-  return res.status(200).json(new ApiResponse(200, user));
+  res.status(200).json({
+    success: true,
+    user,
+  });
 });
+
 // Logout function for dashboard admin
 export const logoutAdmin = asyncHandler(async (req, res) => {
   res
@@ -132,10 +145,13 @@ export const logoutAdmin = asyncHandler(async (req, res) => {
     .cookie("adminToken", "", {
       httpOnly: true,
       expires: new Date(Date.now()),
-      secure: true,
+      secure:true,
       sameSite: "None",
     })
-    .json(new ApiResponse(201,{}, "Admin Logged Out Successfully."));
+    .json({
+      success: true,
+      message: "Admin Logged Out Successfully.",
+    });
 });
 // Logout function for frontend Customer
 export const logoutCustomer = asyncHandler(async (req, res) => {
@@ -147,18 +163,21 @@ export const logoutCustomer = asyncHandler(async (req, res) => {
       secure: true,
       sameSite: "None",
     })
-    .json(new ApiResponse(201,{},"Customer Logged Out Successfully."));
+    .json({
+      success: true,
+      message: "Customer Logged Out Successfully.",
+    });
 });
 
 export const addNewperson = asyncHandler(async (req, res) => {
   if (!req.files || Object.keys(req.files).length === 0) {
-    throw new ApiError("Person Avatar Required", 400);
+    return next(new ErrorHandler("Person Avatar Required!", 400));
   }
 
   const { personAvatar } = req.files;
   const allowedFormats = ["image/png", "image/jpeg", "image/webp"];
   if (!allowedFormats.includes(personAvatar.mimetype)) {
-    new ApiError("File Format Not Supported!", 400);
+    return next(new ErrorHandler("File Format Not Supported!", 400));
   }
   const {
     firstName,
@@ -181,13 +200,14 @@ export const addNewperson = asyncHandler(async (req, res) => {
     !personDepartment ||
     !personAvatar
   ) {
-    throw new ApiError("Please Fill Full Form!", 400);
+    return next(new ErrorHandler("Please Fill Full Form!", 400));
   }
   const isRegistered = await User.findOne({ email });
   if (isRegistered) {
-    throw new ApiError("Person With This Email Already Exists!", 400);
+    return next(
+      new ErrorHandler("Person With This Email Already Exists!", 400)
+    );
   }
-
   const cloudinaryResponse = await cloudinary.uploader.upload(
     personAvatar.tempFilePath
   );
@@ -197,7 +217,9 @@ export const addNewperson = asyncHandler(async (req, res) => {
       "Cloudinary Error:",
       cloudinaryResponse.error || "Unknown Cloudinary error"
     );
-    throw new ApiError("Failed To Upload Person Avatar To Cloudinary", 500);
+    return next(
+      new ErrorHandler("Failed To Upload Person Avatar To Cloudinary", 500)
+    );
   }
   const Persons = await User.create({
     firstName,
@@ -214,5 +236,9 @@ export const addNewperson = asyncHandler(async (req, res) => {
       url: cloudinaryResponse.secure_url,
     },
   });
-  res.status(200).json(new ApiResponse(200, Persons, "New Person Registered"));
+  res.status(200).json({
+    success: true,
+    message: "New person Registered",
+    Persons,
+  });
 });

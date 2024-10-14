@@ -3,6 +3,7 @@ import { UserContext } from '../src/utils/UserContext'
 import { Navigate } from 'react-router-dom';
 import axios from 'axios';
 
+
 const Messages = () => {
   const[messages,setMessages]=useState([])
   const {isAuthenticated} = useContext(UserContext)
@@ -14,10 +15,10 @@ const Messages = () => {
           "http://localhost:8000/api/v1/feedback/getAllFeedback",
           { withCredentials: true }
         );
-        setMessages(data.data);
-       //console.log(data.data);
+        setMessages(data.feedback);
+       console.log(data);
       } catch (error) {
-        console.log(error.response.data.message);
+        console.log(error?.response?.data?.feedback);
       }
     };
     fetchMessages();

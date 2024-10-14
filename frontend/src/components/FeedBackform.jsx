@@ -24,7 +24,7 @@ const FeedBackform = () => {
           }
         )
         .then((res) => {
-          console.log(res);
+          
           toast.success(res.data.message);
           setFirstName("");
           setLastName("");
@@ -33,7 +33,7 @@ const FeedBackform = () => {
           setMessage("");
         });
     } catch (error) {
-      console.log(error);
+      
       toast.error(error.response.data.message);
     }
   };

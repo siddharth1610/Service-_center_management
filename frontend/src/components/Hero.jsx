@@ -1,19 +1,13 @@
-import React,{useContext} from 'react'
-import { UserContext } from '../utils/UserContext'
+import React from 'react'
 
 const Hero = ({title,imageUrl}) => {
-  // const {user}=useContext(UserContext)
-  // console.log(user);
+  
   
   return (
    <div className='hero container'>
     <div className='banner'>
         
-    {/* <h5>
-                  Welcome {
-                    `${user.data.firstName} ${user.data.lastName}`}{" "}
-                </h5> */}
-
+    
        
         <h1>{title}</h1>
         <p>

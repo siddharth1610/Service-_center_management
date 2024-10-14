@@ -1,5 +1,4 @@
-import  ApiError  from "../utils/ApiError.js";
-import { ApiResponse } from "../utils/Apiresponse.js";
+import ErrorHandler from "../utils/errorMiddleware.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Feedback } from "../models/feedbackSchema.js";
 
@@ -8,21 +7,22 @@ export const sendFeedback = asyncHandler(async(req,res)=>{
     console.log(req.body)
 
     if(!firstName|| !lastName || !email || !message || !phone){
-        throw new ApiError(400, "All field are required")
-    }
+        return next(new ErrorHandler("Please Fill Full Form!",400))
+  }
 
     await Feedback.create({
         firstName,lastName,email,message,phone
     })
-    return res.status(200).json(
-        new ApiResponse(200,{},"Message sent Succesfully")
-    )
-})
+    return res.status(200).json({
+        success: true,
+        message: "Message Send Successfully!",
+      });
+    });
 
 export const getAllFeedback = asyncHandler(async(req,res)=>{
 const feedback =await Feedback.find();
-return res.status(200).json(
-    new ApiResponse(200,feedback)
-)
-
-}) 
+res.status(200).json({
+    success: true,
+    feedback,
+  });
+}); 

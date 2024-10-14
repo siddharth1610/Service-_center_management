@@ -1,11 +1,10 @@
-import mongoose from "mongoose";
+
 import { User } from "../models/userSchema.js";
-import  ApiError  from "../utils/ApiError.js";
-import { ApiResponse } from "../utils/Apiresponse.js";
+import ErrorHandler from "../utils/errorMiddleware.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Appointment } from "../models/appointmentSchema.js";
 
-export const postAppointment = asyncHandler(async(req,res)=>{
+export const postAppointment = asyncHandler(async(req,res,next)=>{
    const {firstName,
     lastName,
     email,
@@ -15,7 +14,6 @@ export const postAppointment = asyncHandler(async(req,res)=>{
     department,
     person_firstName,
     person_lastName,
-    productId,
     hasVisited,
     complaintMessage
    
@@ -26,14 +24,13 @@ export const postAppointment = asyncHandler(async(req,res)=>{
     !email ||
     !phone ||
     !gender ||
-    !productId||
     !appointment_date ||
     !department ||
     !person_firstName ||
     !person_lastName ||
     !complaintMessage
   ) {
-    throw (new ApiError("Please Fill Full Form!", 400));
+    return next(new ErrorHandler("Please Fill Full Form!", 400));
   }
   const isConflict = await User.find({
     firstName: person_firstName,
@@ -42,12 +39,11 @@ export const postAppointment = asyncHandler(async(req,res)=>{
     personDepartment: department,
   });
   if (isConflict.length === 0) {
-    throw(new ApiError("person not found", 404));
+    return next(new ErrorHandler("Person not found", 404));
   }
-
   if (isConflict.length > 1) {
-    throw(
-      new ApiError(
+    return next(
+      new ErrorHandler(
         "Persons Conflict! Please Contact Through Email Or Phone!",
         400
       )
@@ -61,7 +57,7 @@ export const postAppointment = asyncHandler(async(req,res)=>{
     email,
     phone,
     gender,
-    productId,
+    
     appointment_date,
     department,
     person: {
@@ -73,18 +69,19 @@ export const postAppointment = asyncHandler(async(req,res)=>{
     personId,
     customerId,
   });
-  res.status(200).json(
-new ApiResponse(200,
+  res.status(200).json({
+    success: true,
     appointment,
-    "Appointment Send!")
-  );
+    message: "Appointment Send!",
+  });
 });
 
 export const getAllAppointments = asyncHandler(async (req, res, next) => {
     const appointments = await Appointment.find();
-    res.status(200).json( new ApiResponse(200,
-      appointments),
-    );
+    res.status(200).json({
+      success: true,
+      appointments,
+    });
   });
 
   export const updateAppointmentStatus = asyncHandler(
@@ -92,14 +89,17 @@ export const getAllAppointments = asyncHandler(async (req, res, next) => {
       const { id } = req.params;
       let appointment = await Appointment.findById(id);
       if (!appointment) {
-        throw (new ApiError("Appointment not found!", 404));
-      }
+        return next(new ErrorHandler("Appointment not found!", 404));
+    }
       appointment = await Appointment.findByIdAndUpdate(id, req.body, {
         new: true,
         runValidators: true,
         useFindAndModify: false,
       });
-      res.status(200).json(new ApiResponse(200,appointment,"Appointment Status Updated!"));
+      res.status(200).json({
+        success: true,
+        message: "Appointment Status Updated!",
+      });
     }
   );
   export const deleteAppointment = asyncHandler(async (req, res, next) => {
@@ -109,7 +109,10 @@ export const getAllAppointments = asyncHandler(async (req, res, next) => {
       throw(new ApiError("Appointment Not Found!", 404));
     }
     await appointment.deleteOne();
-    res.status(200).json(new ApiResponse(200,appointment,"Appointment Deleted!"));
+    res.status(200).json({
+      success: true,
+      message: "Appointment Deleted!",
+    });
   });
 
 

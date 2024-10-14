@@ -10,12 +10,12 @@ const Persons = () => {
   useEffect(() => {
     const fetchPersons = async () => {
       try {
-        const  data  = await axios.get(
+        const  {data}  = await axios.get(
           "http://localhost:8000/api/v1/user/allperson",
           { withCredentials: true }
         );
-        setPersons(data.data.data);
-        //console.log(data.data.data);
+        setPersons(data.persons);
+        console.log(data);
       } catch (error) {
         toast.error(error.response.data.message);
       }

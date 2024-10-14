@@ -5,7 +5,8 @@ import fileUpload from "express-fileupload"
 import feedbackRouter from "./router/feedbackRouter.js"
 import userRouter from "./router/userRouter.js"
 import appointmentRouter from "./router/appointementRouter.js"
-import productRouter from "./router/productRouter.js"
+import { errorMiddleware } from "./utils/errorMiddleware.js"
+
 
 const app = express()
 
@@ -31,8 +32,8 @@ app.use(
  app.use("/api/v1/feedback",feedbackRouter)
  app.use("/api/v1/user",userRouter)
  app.use("/api/v1/appointment",appointmentRouter)
- app.use("/api/v1/product",productRouter)
-
+ 
+ app.use(errorMiddleware);
  
  export {app}
     

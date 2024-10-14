@@ -8,7 +8,8 @@ import { FaUserDoctor } from "react-icons/fa6";
 import { MdAddModerator } from "react-icons/md";
 import { IoPersonAddSharp } from "react-icons/io5";
 import {Navigate, useNavigate } from "react-router-dom";
-import { MdAddShoppingCart } from "react-icons/md";
+import { GrUserWorker } from "react-icons/gr";
+
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -54,11 +55,7 @@ const Sidebar = () => {
     navigateTo("/admin/addnew");
     setShow(!show);
   };
-  const AddNewProduct = () => {
-    navigateTo("/AddAllproduct");
-    setShow(!show);
-  };
-  
+ 
 
   
   
@@ -71,11 +68,11 @@ const Sidebar = () => {
     >
       <div className="links">
       <TiHome onClick={gotoHomePage} />
-          <FaUserDoctor onClick={gotoAllpersons} />
+          <GrUserWorker onClick={gotoAllpersons} />
           <MdAddModerator onClick={gotoAddNewAdmin} />
           <IoPersonAddSharp onClick={gotoAddNewPerson} />
           <AiFillMessage onClick={gotoMessagesPage} />
-          <MdAddShoppingCart onClick={AddNewProduct} />
+          
           <RiLogoutBoxFill onClick={handlelogout} />
       </div>
     </nav>
